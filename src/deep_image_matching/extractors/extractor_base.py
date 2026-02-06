@@ -17,6 +17,29 @@ import rasterio
 
 logger = logging.getLogger("dim")
 
+def deal_with_alpha(img):
+    # Solid background color (B, G, R)
+    bg_color = (0, 0, 0)  # black
+    # bg_color = (255, 255, 255)  # white
+    # bg_color = (128, 128, 128)  # gray
+
+    # BGRA -> split
+    bgr = img[:, :, :3].astype(np.float32)
+    a = img[:, :, 3].astype(np.float32) / 255.0  # alpha in [0,1]
+
+    # Make solid background image
+    bg = np.zeros_like(bgr, dtype=np.float32)
+    bg[:, :] = np.array(bg_color, dtype=np.float32)
+
+    # Alpha composite: out = fg*a + bg*(1-a)
+    a3 = np.dstack([a, a, a])
+    bgr = bgr * a3 + bg * (1.0 - a3)
+    bgr = np.clip(bgr, 0, 255).astype(np.uint8)
+    # print("in function")
+    # print(bgr.shape)
+
+    return bgr
+
 
 class FeaturesDict(TypedDict):
     keypoints: np.ndarray
@@ -189,8 +212,16 @@ class ExtractorBase(metaclass=ABCMeta):
         # Load image
         with rasterio.open(str(im_path)) as src:
             image = src.read()
+            print(image.shape)
+
             # Convert from (bands, rows, cols) to (rows, cols, bands)
             image = np.transpose(image, (1, 2, 0))
+            # If 4 bands, drop the last (alpha) or keep first 3
+            if image.shape[2] >= 4:
+                image = deal_with_alpha(image)
+                # image = image[:3, :, :]  # keep bands 1
+            print("image_size ----------------")
+            print(image.shape)
             # If single band, squeeze to (rows, cols)
             if image.shape[2] == 1:
                 image = image[:, :, 0]

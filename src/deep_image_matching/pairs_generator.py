@@ -136,7 +136,9 @@ def pairs_from_lowres(
     # Extract features
     features_dict = {}
     logger.info("Extracting features from downsampled images...")
+    # print(img_list)
     for img in tqdm(img_list):
+        print(img)
         if use_superpoint:
             i0 = cv2.imread(str(img), cv2.IMREAD_GRAYSCALE).astype(np.float32)
             size = i0.shape[:2][::-1]
