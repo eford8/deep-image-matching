@@ -37,8 +37,8 @@ Key features:
 | ---------------------------------- | --------------------------------------------------------- |
 | &check; SuperPoint                 | &check; Lightglue (with Superpoint, Disk, and ALIKED)     |
 | &check; DISK                       | &check; SuperGlue (with Superpoint)                       |
-| &#x2610; Superpoint free           | &check; Nearest neighbor (with KORNIA Descriptor Matcher) |
-| &check; ALIKE                      | &check; LoFTR (only GPU)                                  |
+| &check; Superpoint free            | &check; Nearest neighbor (with KORNIA Descriptor Matcher) |
+| &check; SRIF                       | &check; LoFTR (only GPU)                                  |
 | &check; ALIKED                     | &check; SE2-LoFTR (no tiling and only GPU)                |
 | &check; KeyNet + OriNet + HardNet8 | &check; RoMa                                              |
 | &check; DeDoDe (only GPU)          | &#x2610; GlueStick                                        |
@@ -100,7 +100,7 @@ import deep_image_matching as dim
 To test most of the functionality, run the tests to check if deep-image-matching is correctly installed, run:
 
 ```bash
-uv pytest tests
+uv run pytests
 ```
 
 For more information, check the [documentation](https://3dom-fbk.github.io/deep-image-matching/installation/).

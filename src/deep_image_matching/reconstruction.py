@@ -10,7 +10,8 @@ logger = logging.getLogger("dim")
 
 
 def incremental_mapping_with_pbar(database_path, image_path, sfm_path):
-    num_images = pycolmap.Database(database_path).num_images
+    database = pycolmap.Database.open(str(database_path))
+    num_images = database.num_images()
     with enlighten.Manager() as manager:
         with manager.counter(total=num_images, desc="Images registered:") as pbar:
             pbar.update(0, force=True)
@@ -90,6 +91,7 @@ def incremental_reconstruction(
     # Exporting the models in other formats
     for index, model in reconstructions.items():
         reconstruction_dir = sfm_dir / f"{index}"
+        reconstruction_dir.mkdir(parents=True, exist_ok=True)
 
         # Export ply
         if export_ply:
